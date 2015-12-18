@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+
+PASSWORD_STORE_DIR="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
+
+if (( "$#" )) ; then
+  # must open in a subshell, otherwise rofi tries to open pinentry
+  # and things get weird
+  ( pass -c "$@" >/dev/null 2>&1 ) & disown
+else
+  shopt -s globstar
+  cd "${PASSWORD_STORE_DIR}"
+  passwords=( **/*.gpg )
+  for password in "${passwords[@]}" ; do
+    echo "${password%.gpg}"
+  done
+fi
