@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+# convert an image into wallpaper-size using imagemagick
+# first stretch it to 1920px wide, preserving aspect, and then crop a
+# 1080px tall piece of its center
+
+convert "${1}" -gravity Center -resize 1920 -crop 1920x1080+0+0 "${2}"
