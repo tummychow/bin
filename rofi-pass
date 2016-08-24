@@ -3,9 +3,8 @@
 PASSWORD_STORE_DIR="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
 
 if (( "$#" )) ; then
-  # must open in a subshell, otherwise rofi tries to open pinentry
-  # and things get weird
-  ( pass -c "$@" >/dev/null 2>&1 ) & disown
+  # must open in a subshell with redirected output, otherwise rofi tries to open pinentry and things get weird
+  ( pass -c "$@" && notify-send -t 5000 'pass' "Copied $@" ) &>/dev/null & disown
 else
   shopt -s globstar
   cd "${PASSWORD_STORE_DIR}"
