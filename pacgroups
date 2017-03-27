@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+
+# check for packages in standard groups that we don't have (eg if those
+# groups have expanded since we originally installed them)
+
+# for example, if you installed base/base-devel 2yrs ago and you want to
+# see if new packages have joined those groups since you first installed
+# them, you can invoke "pacgroups base base-devel"
+
+comm -23 <(pacman -Sgq "${@}" | sort | uniq) <(pacman -Qq | sort)
