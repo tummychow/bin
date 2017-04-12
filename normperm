@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+# set permissions to the usual 755/644 for a directory tree
+chmod -R u=rwX,go=rX "${@}"
