@@ -1,7 +1,9 @@
 #!/usr/bin/bash
 
-# list packages that you installed from outside the standard groups
+# list packages that you installed from outside the listed groups,
+# eg "pacmine base base-devel"
+
 # TODO: list in tree form (ie explicitly installed packages that are
 # dependencies of others should be treed underneath them somehow)
 
-comm -23 <(pacman -Qeq | sort) <(pacman -Sgq base base-devel | sort)
+comm -23 <(pacman -Qeq | sort -u) <(pacman -Sgq "${@}" | sort -u)

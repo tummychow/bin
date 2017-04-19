@@ -7,4 +7,4 @@
 # see if new packages have joined those groups since you first installed
 # them, you can invoke "pacgroups base base-devel"
 
-comm -23 <(pacman -Sgq "${@}" | sort | uniq) <(pacman -Qq | sort)
+comm -23 <(pacman -Sgq "${@}" | sort -u) <(pacman -Qq | sort -u)
