@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+# create spectrogram for an audio file to the given output
+sox "${1}" -n spectrogram -x 1920 -Y 1280 -o "${2:-spectrogram.png}"
