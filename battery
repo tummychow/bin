@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+
+SYSFS=/sys/class/power_supply
+BATTERY=BAT0
+MAINS=AC0
+
+# power is measured in watts
+POWER_NOW=$(<"$SYSFS/$BATTERY/power_now")
+# energy is measured in watt-hours
+ENERGY_NOW=$(<"$SYSFS/$BATTERY/energy_now")
+ENERGY_FULL=$(<"$SYSFS/$BATTERY/energy_full")
+# 1 if mains is plugged in, 0 otherwise
+AC_ON=$(<"$SYSFS/$MAINS/online")
+
+# this is equivalent to "$SYSFS/$BATTERY/capacity"
+# however, since we need the energy values anyway, i prefer to calculate it here
+printf "%s%%" "$(( ENERGY_NOW * 100 / ENERGY_FULL ))"
+if (( AC_ON )) ; then
+  if (( POWER_NOW )) ; then
+    printf " charging in %smin" "$(( (ENERGY_FULL - ENERGY_NOW) * 60 / POWER_NOW ))"
+  else
+    printf " not charging"
+  fi
+else
+  if (( POWER_NOW )) ; then
+    printf " discharging in %smin" "$(( ENERGY_NOW * 60 / POWER_NOW ))"
+  else
+    # TODO: can this ever actually happen?
+    printf " not discharging"
+  fi
+fi
+printf "\n"
