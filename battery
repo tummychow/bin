@@ -4,9 +4,10 @@ SYSFS=/sys/class/power_supply
 BATTERY=BAT0
 MAINS=AC0
 
-# power is measured in watts
+# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/power/power_supply_class.txt
+# power is measured in microwatts
 POWER_NOW=$(<"$SYSFS/$BATTERY/power_now")
-# energy is measured in watt-hours
+# energy is measured in microwatt-hours
 ENERGY_NOW=$(<"$SYSFS/$BATTERY/energy_now")
 ENERGY_FULL=$(<"$SYSFS/$BATTERY/energy_full")
 # 1 if mains is plugged in, 0 otherwise
