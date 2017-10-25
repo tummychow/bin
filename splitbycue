@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+# split the second argument into flac, using the cue file specified in the first argument
+# depends on cuetools, flac, and shntool (which may need more dependencies to decode the input)
+
+set -e
+
+TMPD="$(mktemp -d -p .)"
+trap 'rmdir "$TMPD"' EXIT
+
+shnsplit -f "$1" -o flac -t "%n %t" -d "$TMPD" -- "$2"
+cuetag.sh "$1" "$TMPD"/*.flac
+mv "$TMPD"/*.flac .
