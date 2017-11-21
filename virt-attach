@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+# i use libvirt with spice and listen=none, which can only
+# be attached to via the -a flag
+# since we can't pass arguments in rofi, we need a script
+# that includes the argument for us
+
+exec virt-viewer -a "$@"
