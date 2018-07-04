@@ -1,0 +1,45 @@
+#!/usr/bin/python3
+
+import json
+import os
+import socket
+import sys
+
+# json ipc based single-instance mpv
+# https://github.com/mpv-player/mpv/blob/master/TOOLS/umpv
+# https://mpv.io/manual/stable/#json-ipc
+
+SOCKET_PATH = os.path.join(os.getenv('XDG_RUNTIME_DIR') or '/tmp', 'umpv.socket')
+
+with socket.socket(family=socket.AF_UNIX, type=socket.SOCK_STREAM | socket.SOCK_CLOEXEC) as s:
+    try:
+        s.connect(SOCKET_PATH)
+    except (ConnectionRefusedError, FileNotFoundError):
+        mpv_args = [
+            os.getenv('MPV') or 'mpv',
+            f'--input-ipc-server={SOCKET_PATH}',
+            '--no-terminal',
+            '--force-window=yes',
+            # TODO: https://mpv.io/manual/stable/#options-log-file
+            '--',
+        ]
+        mpv_args.extend(sys.argv[1:])
+        os.execvp(mpv_args[0], mpv_args)
+
+    for (i, f) in enumerate(sys.argv[1:]):
+        command = {
+            'command': [
+                'raw',
+                'loadfile',
+                # TODO: support urls as well as files
+                os.path.abspath(f),
+                'append'
+            ],
+            'request_id': [
+                os.getpid(),
+                i,
+            ],
+        }
+        command_str = json.dumps(command, ensure_ascii=True, indent=None, separators=(',', ':')) + '\n'
+        # TODO: check response using request_id
+        s.sendall(command_str.encode('ascii'))
