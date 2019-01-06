@@ -10,6 +10,7 @@ POWER_NOW=$(<"$SYSFS/$BATTERY/power_now")
 # energy is measured in microwatt-hours
 ENERGY_NOW=$(<"$SYSFS/$BATTERY/energy_now")
 ENERGY_FULL=$(<"$SYSFS/$BATTERY/energy_full")
+ENERGY_FULL_DESIGN=$(<"$SYSFS/$BATTERY/energy_full_design")
 # 1 if mains is plugged in, 0 otherwise
 AC_ON=$(<"$SYSFS/$MAINS/online")
 
@@ -30,4 +31,4 @@ else
     printf " not discharging"
   fi
 fi
-printf "\n"
+printf " (%s%% of design)\n" "$(( ENERGY_FULL * 100 / ENERGY_FULL_DESIGN ))"
